@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Entrar - Preparação Etec</title>
+
+    <link rel="stylesheet" href="conta.css">
+</head>
+
+<body>
+
+<div class="conta-container">
+
+    <div class="conta-card">
+
+        <h1>🔐 Entrar</h1>
+
+        <p class="subtitulo">
+            Entre na sua conta da Preparação Etec
+        </p>
+
+        <label for="email">E-mail</label>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Digite seu e-mail"
+            autocomplete="email"
+        >
+
+        <label for="password">Senha</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Digite sua senha"
+            autocomplete="current-password"
+        >
+
+        <button class="conta-btn" id="loginBtn">
+            Entrar
+        </button>
+
+        <p class="conta-mensagem" id="message"></p>
+
+        <p class="conta-link">
+            Ainda não tem uma conta?
+            <a href="cadastro.html">Criar conta</a>
+        </p>
+
+        <a class="voltar" href="index.html">
+            ← Voltar para o site
+        </a>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="login.js"></script>
+
+</body>
+</html>

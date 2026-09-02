@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Painel Admin - Preparação Etec</title>
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<header class="admin-header">
+
+    <div>
+        <h1>🛡️ Painel Admin</h1>
+        <p>Preparação Etec</p>
+    </div>
+
+    <div class="acoes">
+
+        <button onclick="window.location.href='index.html'">
+            🏠 Site
+        </button>
+
+        <button onclick="sair()">
+            🚪 Sair
+        </button>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <section class="estatisticas">
+
+        <div class="stat-card">
+            <span>👥</span>
+            <strong id="totalUsuarios">0</strong>
+            <p>Contas cadastradas</p>
+        </div>
+
+        <div class="stat-card">
+            <span>🟢</span>
+            <strong id="usuariosOnline">0</strong>
+            <p>Online agora</p>
+        </div>
+
+        <div class="stat-card">
+            <span>👑</span>
+            <strong id="totalAdmins">0</strong>
+            <p>Administradores</p>
+        </div>
+
+    </section>
+
+
+    <section class="painel">
+
+        <div class="painel-topo">
+
+            <div>
+                <h2>👥 Contas cadastradas</h2>
+                <p>Usuários que possuem uma conta no site.</p>
+            </div>
+
+            <button class="atualizar" onclick="carregarUsuarios()">
+                🔄 Atualizar
+            </button>
+
+        </div>
+
+
+        <div class="tabela-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Tipo</th>
+                        <th>Criado em</th>
+                        <th>Último acesso</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="listaUsuarios"></tbody>
+
+            </table>
+
+        </div>
+
+        <p id="mensagem"></p>
+
+    </section>
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+<script src="admin.js"></script>
+
+</body>
+
+</html>

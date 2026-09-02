@@ -1,0 +1,109 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f5fa;
+    color: #182033;
+}
+
+.conta-container {
+    width: 100%;
+    max-width: 420px;
+    margin: 70px auto;
+    padding: 0 20px;
+}
+
+.conta-card {
+    background: white;
+    padding: 35px 30px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px #00000015;
+}
+
+.conta-card h1 {
+    text-align: center;
+    margin-top: 0;
+    color: #202b5b;
+}
+
+.conta-card .subtitulo {
+    text-align: center;
+    color: #667085;
+    margin-bottom: 30px;
+}
+
+.conta-card label {
+    display: block;
+    font-weight: bold;
+    margin: 15px 0 7px;
+}
+
+.conta-card input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d5d9e2;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+}
+
+.conta-card input:focus {
+    border-color: #3157d5;
+    box-shadow: 0 0 0 3px #3157d520;
+}
+
+.conta-btn {
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 22px;
+    background: #3157d5;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.conta-btn:hover {
+    opacity: 0.9;
+}
+
+.conta-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.conta-mensagem {
+    text-align: center;
+    margin-top: 18px;
+    min-height: 22px;
+    font-weight: bold;
+}
+
+.conta-link {
+    text-align: center;
+    margin-top: 25px;
+    color: #667085;
+}
+
+.conta-link a {
+    color: #3157d5;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.conta-link a:hover {
+    text-decoration: underline;
+}
+
+.voltar {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #667085;
+    text-decoration: none;
+}

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preparação Etec</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>📚 Preparação Etec</h1>
+    <p>Seu treinamento para o Vestibulinho</p>
+
+    <!-- CONTA -->
+    <div id="contaArea" style="margin-top:15px;">
+        <span id="usuarioInfo">Não conectado</span>
+
+        <button
+            id="entrarBtn"
+            onclick="window.location.href='login.html'"
+            style="margin-left:8px;"
+        >
+            🔐 Entrar
+        </button>
+
+        <button
+            id="criarContaBtn"
+            onclick="window.location.href='cadastro.html'"
+            style="margin-left:8px;"
+        >
+            📝 Criar conta
+        </button>
+
+        <button
+            id="sairBtn"
+            onclick="sairDaConta()"
+            style="margin-left:8px; display:none;"
+        >
+            🚪 Sair
+        </button>
+    </div>
+</header>
+
+<nav>
+    <button onclick="mostrar('inicio')">🏠 Início</button>
+    <button onclick="mostrar('aula')">📖 Aula</button>
+    <button onclick="mostrar('exercicios')">✏️ Exercícios</button>
+    <button onclick="mostrar('simulado')">📝 Simulado</button>
+    <button onclick="mostrar('desempenho')">📊 Desempenho</button>
+</nav>
+
+<main>
+
+    <!-- INÍCIO -->
+    <section id="inicio" class="pagina ativa">
+
+        <div class="card destaque">
+            <h2 id="diaTitulo">Dia de estudo</h2>
+            <p id="dataAtual"></p>
+            <h3 id="contador"></h3>
+        </div>
+
+        <div class="grid">
+
+            <div class="card">
+                <h2>📖 Aula de hoje</h2>
+                <h3 id="materia1"></h3>
+                <p id="tema1"></p>
+            </div>
+
+            <div class="card">
+                <h2>📚 Segunda matéria</h2>
+                <h3 id="materia2"></h3>
+                <p id="tema2"></p>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <h2>⏱️ Seu estudo de hoje</h2>
+
+            <div class="tempo">
+                <span id="timer">60:00</span>
+            </div>
+
+            <button class="principal" onclick="iniciarTimer()">▶ Começar 1 hora</button>
+            <button onclick="pausarTimer()">⏸ Pausar</button>
+            <button onclick="resetarTimer()">🔄 Resetar</button>
+        </div>
+
+        <div class="card">
+            <h2>🎯 Meta de hoje</h2>
+            <ul>
+                <li>Assistir/ler as duas aulas</li>
+                <li>Fazer os exercícios</li>
+                <li>Fazer o mini-simulado</li>
+                <li>Revisar os erros</li>
+            </ul>
+        </div>
+
+    </section>
+
+
+    <!-- AULA -->
+    <section id="aula" class="pagina">
+
+        <div class="card">
+
+            <span class="tag" id="tagAula"></span>
+
+            <h2 id="tituloAula"></h2>
+
+            <div id="conteudoAula"></div>
+
+            <hr>
+
+            <h3>💡 Exemplo</h3>
+
+            <div class="exemplo" id="exemploAula"></div>
+
+        </div>
+
+        <button class="principal" onclick="proximaAula()">
+            Próxima aula →
+        </button>
+
+    </section>
+
+
+    <!-- EXERCÍCIOS -->
+    <section id="exercicios" class="pagina">
+
+        <div class="card">
+
+            <h2>✏️ Exercícios do dia</h2>
+
+            <p>
+                As questões mudam automaticamente de acordo com o dia.
+            </p>
+
+            <div id="listaQuestoes"></div>
+
+            <button class="principal" onclick="corrigirExercicios()">
+                Corrigir exercícios
+            </button>
+
+            <div id="resultadoExercicios"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SIMULADO -->
+    <section id="simulado" class="pagina">
+
+        <div class="card">
+
+            <h2 id="tituloSimulado">📝 Mini-simulado</h2>
+
+            <p id="descricaoSimulado"></p>
+
+            <div id="listaSimulado"></div>
+
+            <button class="principal" onclick="corrigirSimulado()">
+                Finalizar simulado
+            </button>
+
+            <div id="resultadoSimulado"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- DESEMPENHO -->
+    <section id="desempenho" class="pagina">
+
+        <div class="card">
+
+            <h2>📊 Seu desempenho</h2>
+
+            <div class="estatisticas">
+
+                <div>
+                    <strong id="totalAcertos">0</strong>
+                    <span>Acertos</span>
+                </div>
+
+                <div>
+                    <strong id="totalErros">0</strong>
+                    <span>Erros</span>
+                </div>
+
+                <div>
+                    <strong id="porcentagem">0%</strong>
+                    <span>Aproveitamento</span>
+                </div>
+
+            </div>
+
+            <h3>📚 Por matéria</h3>
+
+            <div id="materiasDesempenho"></div>
+
+            <button onclick="limparDesempenho()">
+                🗑️ Zerar desempenho
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    <p>Preparação Vestibulinho Etec • 2026</p>
+</footer>
+
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- CONFIGURAÇÃO DO SUPABASE -->
+<script src="supabase.js"></script>
+
+<!-- CONTROLE DA CONTA -->
+<script src="conta.js"></script>
+
+<!-- SEU SISTEMA ATUAL DO TREINAMENTO -->
+<script src="script.js"></script>
+
+</body>
+</html>
