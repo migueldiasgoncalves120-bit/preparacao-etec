@@ -209,3 +209,173 @@ footer {
     }
 }
 
+/* =========================
+   POP-UP ASSINATURA
+========================= */
+
+.popup-overlay {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    z-index: 9999;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.popup-overlay.ativo {
+    display: flex;
+}
+
+.popup-card {
+    position: relative;
+
+    width: 100%;
+    max-width: 430px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 35px 30px;
+
+    text-align: center;
+
+    box-shadow:
+        0 15px 50px rgba(0, 0, 0, 0.25);
+
+    animation: aparecerPopup 0.2s ease;
+}
+
+@keyframes aparecerPopup {
+
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+}
+
+.popup-fechar {
+    position: absolute;
+
+    top: 12px;
+    right: 15px;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+    color: #777;
+}
+
+.popup-icone {
+    font-size: 45px;
+
+    margin-bottom: 10px;
+}
+
+.popup-card h2 {
+    margin-top: 0;
+}
+
+.popup-card p {
+    color: #667085;
+
+    line-height: 1.5;
+}
+
+.preco {
+    margin: 25px 0;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background: #f3f5fa;
+
+    font-weight: bold;
+}
+
+.popup-assinar {
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #3157d5;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.popup-assinar:hover {
+    opacity: 0.9;
+}
+
+.popup-aviso {
+    font-size: 12px;
+}
+
+    /* =========================
+   CORREÇÃO DAS QUESTÕES
+========================= */
+
+.questao-resultado {
+
+    margin-top: 15px;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    border-left: 5px solid;
+}
+
+.questao-resultado.acerto {
+
+    background: #ecfdf3;
+
+    border-left-color: #16a34a;
+}
+
+.questao-resultado.erro {
+
+    background: #fef2f2;
+
+    border-left-color: #dc2626;
+}
+
+.questao-resultado strong {
+    font-size: 16px;
+}
+
+.questao-resultado p {
+    margin: 7px 0;
+}
+
+

@@ -475,7 +475,44 @@ const diaAtual = obterDia();
 // TROCAR PÁGINA
 // ========================================
 
-function mostrar(id) {
+async function mostrar(id) {
+
+    // INÍCIO É SEMPRE LIBERADO
+    if (id === "inicio") {
+
+        document.querySelectorAll(".pagina").forEach(
+            pagina => {
+                pagina.classList.remove("ativa");
+            }
+        );
+
+        const pagina =
+            document.getElementById(id);
+
+        if (pagina) {
+            pagina.classList.add("ativa");
+        }
+
+        return;
+    }
+
+
+    // VERIFICA ACESSO
+    if (
+        typeof verificarAcesso === "function"
+    ) {
+
+        const acesso =
+            await verificarAcesso();
+
+        if (!acesso) {
+
+            abrirPopup();
+
+            return;
+        }
+    }
+
 
     document.querySelectorAll(".pagina").forEach(
         pagina => {
@@ -483,12 +520,15 @@ function mostrar(id) {
         }
     );
 
+
     const pagina =
         document.getElementById(id);
+
 
     if (pagina) {
         pagina.classList.add("ativa");
     }
+
 }
 
 
@@ -755,6 +795,10 @@ function criarQuestao(
 function corrigirExercicios() {
 
     let acertos = 0;
+    let respondidas = 0;
+
+    let resultadoHTML = "";
+
 
     exerciciosDoDia.forEach(
         (questao, indice) => {
@@ -764,40 +808,122 @@ function corrigirExercicios() {
                     `input[name="ex${indice}"]:checked`
                 );
 
+
             if (!selecionada) {
+
+                resultadoHTML += `
+                    <div class="questao-resultado erro">
+                        <strong>❌ Questão ${indice + 1}</strong>
+
+                        <p>
+                            Você não respondeu.
+                        </p>
+
+                        <p>
+                            <strong>
+                                Resposta correta:
+                            </strong>
+                            ${questao.alternativas[questao.resposta]}
+                        </p>
+                    </div>
+                `;
+
+                salvarResultado(
+                    questao.materia,
+                    false
+                );
+
                 return;
             }
+
+
+            respondidas++;
+
 
             const resposta =
                 Number(
                     selecionada.value
                 );
 
+
             const acertou =
                 resposta === questao.resposta;
+
 
             if (acertou) {
                 acertos++;
             }
 
+
             salvarResultado(
                 questao.materia,
                 acertou
             );
+
+
+            if (acertou) {
+
+                resultadoHTML += `
+                    <div class="questao-resultado acerto">
+
+                        <strong>
+                            ✅ Questão ${indice + 1} — Acertou!
+                        </strong>
+
+                        <p>
+                            Sua resposta:
+                            ${questao.alternativas[resposta]}
+                        </p>
+
+                    </div>
+                `;
+
+            } else {
+
+                resultadoHTML += `
+                    <div class="questao-resultado erro">
+
+                        <strong>
+                            ❌ Questão ${indice + 1} — Errou
+                        </strong>
+
+                        <p>
+                            Sua resposta:
+                            ${questao.alternativas[resposta]}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Resposta correta:
+                            </strong>
+
+                            ${questao.alternativas[questao.resposta]}
+                        </p>
+
+                    </div>
+                `;
+            }
+
         }
     );
+
 
     const total =
         exerciciosDoDia.length;
 
+
     const porcentagem =
-        Math.round(
+        total === 0
+        ? 0
+        : Math.round(
             (acertos / total) * 100
         );
+
 
     document.getElementById(
         "resultadoExercicios"
     ).innerHTML = `
+
         <div class="resultado">
 
             <h2>🎯 Resultado</h2>
@@ -807,8 +933,17 @@ function corrigirExercicios() {
             </h1>
 
             <p>
+                Respondidas:
+                <strong>
+                    ${respondidas}/${total}
+                </strong>
+            </p>
+
+            <p>
                 Aproveitamento:
-                <strong>${porcentagem}%</strong>
+                <strong>
+                    ${porcentagem}%
+                </strong>
             </p>
 
             ${
@@ -819,10 +954,17 @@ function corrigirExercicios() {
                 : "💪 Continue treinando!"
             }
 
+            <hr>
+
+            <h2>
+                📋 Correção questão por questão
+            </h2>
+
+            ${resultadoHTML}
+
         </div>
     `;
 }
-
 
 // ========================================
 // SIMULADO
@@ -862,6 +1004,10 @@ function carregarSimulado() {
 function corrigirSimulado() {
 
     let acertos = 0;
+    let respondidas = 0;
+
+    let resultadoHTML = "";
+
 
     simuladoDoDia.forEach(
         (questao, indice) => {
@@ -871,40 +1017,127 @@ function corrigirSimulado() {
                     `input[name="sim${indice}"]:checked`
                 );
 
+
             if (!selecionada) {
+
+                resultadoHTML += `
+                    <div class="questao-resultado erro">
+
+                        <strong>
+                            ❌ Questão ${indice + 1}
+                        </strong>
+
+                        <p>
+                            Você não respondeu.
+                        </p>
+
+                        <p>
+                            <strong>
+                                Resposta correta:
+                            </strong>
+
+                            ${questao.alternativas[questao.resposta]}
+                        </p>
+
+                    </div>
+                `;
+
+                salvarResultado(
+                    questao.materia,
+                    false
+                );
+
                 return;
             }
+
+
+            respondidas++;
+
 
             const resposta =
                 Number(
                     selecionada.value
                 );
 
+
             const acertou =
                 resposta === questao.resposta;
+
 
             if (acertou) {
                 acertos++;
             }
 
+
             salvarResultado(
                 questao.materia,
                 acertou
             );
+
+
+            if (acertou) {
+
+                resultadoHTML += `
+                    <div class="questao-resultado acerto">
+
+                        <strong>
+                            ✅ Questão ${indice + 1} — Acertou!
+                        </strong>
+
+                        <p>
+                            Sua resposta:
+                            ${questao.alternativas[resposta]}
+                        </p>
+
+                    </div>
+                `;
+
+            } else {
+
+                resultadoHTML += `
+                    <div class="questao-resultado erro">
+
+                        <strong>
+                            ❌ Questão ${indice + 1} — Errou
+                        </strong>
+
+                        <p>
+                            Sua resposta:
+                            ${questao.alternativas[resposta]}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Resposta correta:
+                            </strong>
+
+                            ${questao.alternativas[questao.resposta]}
+                        </p>
+
+                    </div>
+                `;
+            }
+
         }
     );
+
 
     const total =
         simuladoDoDia.length;
 
+
     const porcentagem =
-        Math.round(
+        total === 0
+        ? 0
+        : Math.round(
             (acertos / total) * 100
         );
+
 
     document.getElementById(
         "resultadoSimulado"
     ).innerHTML = `
+
         <div class="resultado">
 
             <h2>🏆 Resultado do simulado</h2>
@@ -914,8 +1147,17 @@ function corrigirSimulado() {
             </h1>
 
             <p>
+                Respondidas:
+                <strong>
+                    ${respondidas}/${total}
+                </strong>
+            </p>
+
+            <p>
                 Aproveitamento:
-                <strong>${porcentagem}%</strong>
+                <strong>
+                    ${porcentagem}%
+                </strong>
             </p>
 
             ${
@@ -925,6 +1167,14 @@ function corrigirSimulado() {
                 ? "👍 Bom desempenho!"
                 : "📚 Revise os conteúdos!"
             }
+
+            <hr>
+
+            <h2>
+                📋 Correção questão por questão
+            </h2>
+
+            ${resultadoHTML}
 
         </div>
     `;
