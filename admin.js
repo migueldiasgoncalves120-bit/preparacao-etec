@@ -656,6 +656,6 @@ if (
     !perfil ||
     perfil.role !== "admin"
 ) {
-    window.location.href = "sem-acesso.html";
+    window.location.href = "http://127.0.0.1:5500/sem-acesso.html";
     return false;
 }
