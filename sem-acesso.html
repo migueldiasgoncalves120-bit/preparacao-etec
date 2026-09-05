@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Acesso negado</title>
+
+    <link rel="stylesheet" href="sem-acesso.css">
+</head>
+
+<body>
+
+    <main class="pagina-erro">
+
+        <div class="card">
+
+            <h1>🚫 Acesso negado</h1>
+
+            <h2>Você não tem acesso a esta página.</h2>
+
+            <p>
+                Esta área é exclusiva para administradores.
+            </p>
+
+            <button id="voltarInicio">
+    🏠 Voltar para o site
+</button>
+
+ </div>
+
+    </main>
+
+
+
+<button id="voltarInicio">
+    
+</button>
+
+<script>
+document.getElementById("voltarInicio").onclick = function () {
+
+    window.location.href = "http://127.0.0.1:5500/index.html";
+
+};
+</script>
+
+
+</body>
+
+</html>

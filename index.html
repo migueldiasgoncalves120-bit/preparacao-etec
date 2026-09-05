@@ -44,11 +44,28 @@
 </header>
 
 <nav>
-    <button onclick="mostrar('inicio')">🏠 Início</button>
-    <button onclick="mostrar('aula')">📖 Aula</button>
-    <button onclick="mostrar('exercicios')">✏️ Exercícios</button>
-    <button onclick="mostrar('simulado')">📝 Simulado</button>
-    <button onclick="mostrar('desempenho')">📊 Desempenho</button>
+
+    <button onclick="mostrar('inicio')">
+        🏠 Início
+    </button>
+
+    <button onclick="tentarAbrirPagina('aula')">
+        📖 Aula
+    </button>
+
+    <button onclick="tentarAbrirPagina('exercicios')">
+        ✏️ Exercícios
+    </button>
+
+    <button onclick="tentarAbrirPagina('simulado')">
+        📝 Simulado
+    </button>
+
+    <button onclick="tentarAbrirPagina('desempenho')">
+        📊 Desempenho
+    </button>
+
+</nav>
 </nav>
 
 <main>
@@ -223,14 +240,56 @@
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- CONFIGURAÇÃO DO SUPABASE -->
 <script src="supabase.js"></script>
 
-<!-- CONTROLE DA CONTA -->
 <script src="conta.js"></script>
 
-<!-- SEU SISTEMA ATUAL DO TREINAMENTO -->
+<script src="acesso.js"></script>
+
 <script src="script.js"></script>
+
+
+<!-- POP-UP DE ASSINATURA -->
+
+<div id="popupAssinatura" class="popup-overlay">
+
+    <div class="popup-card">
+
+        <button
+            class="popup-fechar"
+            onclick="fecharPopup()">
+            ×
+        </button>
+
+        <div class="popup-icone">
+            🔒
+        </div>
+
+        <h2>Conteúdo exclusivo</h2>
+
+        <p>
+            Tenha acesso às aulas, exercícios,
+            simulados e desempenho.
+        </p>
+
+        <div class="preco">
+            📚 Acesso por 30 dias
+        </div>
+
+        <button
+            class="popup-assinar"
+            onclick="assinar()">
+            💳 Assinar agora
+        </button>
+
+        <p class="popup-aviso">
+            O acesso é válido por 30 dias
+            após a confirmação do pagamento.
+        </p>
+
+    </div>
+
+</div>
 
 </body>
 </html>

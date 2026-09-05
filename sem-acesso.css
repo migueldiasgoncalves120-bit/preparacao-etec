@@ -1,0 +1,328 @@
+/* ========================================
+   PÁGINA - SEM ACESSO
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at top, #243b55, #0f172a 55%, #020617);
+
+    color: white;
+    overflow: hidden;
+}
+
+
+/* Fundo com luzes animadas */
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+
+    width: 350px;
+    height: 350px;
+
+    border-radius: 50%;
+
+    filter: blur(90px);
+    opacity: 0.25;
+
+    animation: flutuar 7s ease-in-out infinite alternate;
+}
+
+body::before {
+    background: #6366f1;
+    top: -120px;
+    left: -100px;
+}
+
+body::after {
+    background: #3b82f6;
+    bottom: -120px;
+    right: -100px;
+
+    animation-delay: 2s;
+}
+
+
+/* Container */
+
+.pagina-erro {
+    width: 100%;
+    padding: 25px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    z-index: 2;
+}
+
+
+/* Card */
+
+.card {
+    width: 100%;
+    max-width: 500px;
+
+    padding: 45px 35px;
+
+    text-align: center;
+
+    background: rgba(15, 23, 42, 0.75);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 24px;
+
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.45);
+
+    animation:
+        aparecer 0.8s ease,
+        flutuarCard 4s ease-in-out 0.8s infinite;
+}
+
+
+/* Ícone */
+
+.card::before {
+    content: "🔒";
+
+    display: flex;
+
+    width: 85px;
+    height: 85px;
+
+    margin: 0 auto 25px;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 40px;
+
+    background: rgba(239, 68, 68, 0.12);
+
+    border: 1px solid rgba(239, 68, 68, 0.3);
+
+    border-radius: 50%;
+
+    animation: pulsar 2s ease-in-out infinite;
+}
+
+
+/* Título */
+
+.card h1 {
+    font-size: 32px;
+
+    margin-bottom: 12px;
+
+    animation: aparecerTitulo 0.8s ease 0.2s both;
+}
+
+
+/* Subtítulo */
+
+.card h2 {
+    font-size: 19px;
+
+    font-weight: 500;
+
+    color: #e2e8f0;
+
+    margin-bottom: 12px;
+
+    animation: aparecerTitulo 0.8s ease 0.35s both;
+}
+
+
+/* Texto */
+
+.card p {
+    color: #94a3b8;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    margin-bottom: 30px;
+
+    animation: aparecerTitulo 0.8s ease 0.5s both;
+}
+
+
+/* Botão */
+
+.card button {
+    border: none;
+
+    padding: 14px 25px;
+
+    border-radius: 12px;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        #6366f1,
+        #3b82f6
+    );
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 25px rgba(59, 130, 246, 0.25);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        filter 0.25s ease;
+
+    animation: aparecerTitulo 0.8s ease 0.65s both;
+}
+
+
+.card button:hover {
+    transform: translateY(-3px) scale(1.03);
+
+    box-shadow:
+        0 12px 30px rgba(59, 130, 246, 0.4);
+
+    filter: brightness(1.1);
+}
+
+
+.card button:active {
+    transform: scale(0.97);
+}
+
+
+/* ========================================
+   ANIMAÇÕES
+======================================== */
+
+@keyframes aparecer {
+
+    from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+@keyframes aparecerTitulo {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+@keyframes pulsar {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(239, 68, 68, 0);
+    }
+
+    50% {
+        transform: scale(1.08);
+        box-shadow:
+            0 0 30px rgba(239, 68, 68, 0.25);
+    }
+}
+
+
+@keyframes flutuarCard {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+@keyframes flutuar {
+
+    from {
+        transform: translate(0, 0);
+    }
+
+    to {
+        transform: translate(40px, 30px);
+    }
+}
+
+
+/* ========================================
+   CELULAR
+======================================== */
+
+@media (max-width: 600px) {
+
+    .pagina-erro {
+        padding: 18px;
+    }
+
+    .card {
+        padding: 35px 22px;
+        border-radius: 20px;
+    }
+
+    .card h1 {
+        font-size: 27px;
+    }
+
+    .card h2 {
+        font-size: 17px;
+    }
+
+    .card::before {
+        width: 75px;
+        height: 75px;
+        font-size: 34px;
+    }
+
+    .card button {
+        width: 100%;
+    }
+}
