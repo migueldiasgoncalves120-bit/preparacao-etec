@@ -2,7 +2,7 @@
 // PAINEL ADMIN - PREPARAÇÃO ETEC
 // ========================================
 
-let usuariosAtuais = [];
+let adminVerificado = false;
 
 
 // ========================================
@@ -11,11 +11,17 @@ let usuariosAtuais = [];
 
 async function verificarAdmin() {
 
-    const { data: usuarioData, error: usuarioError } =
-        await supabaseClient.auth.getUser();
+    console.log("🔐 Verificando administrador...");
+
+    const {
+        data: usuarioData,
+        error: usuarioError
+    } = await supabaseClient.auth.getUser();
 
 
-    if (usuarioError || !usuarioData.user) {
+    if (usuarioError || !usuarioData?.user) {
+
+        console.error("Usuário não está logado.");
 
         window.location.href = "login.html";
 
@@ -26,29 +32,46 @@ async function verificarAdmin() {
     const usuario = usuarioData.user;
 
 
-    const { data: perfil, error: perfilError } =
-        await supabaseClient
-            .from("profiles")
-            .select("username, role")
-            .eq("id", usuario.id)
-            .single();
+    const {
+        data: perfil,
+        error: perfilError
+    } = await supabaseClient
+        .from("profiles")
+        .select("username, role")
+        .eq("id", usuario.id)
+        .single();
 
 
-    if (
-        perfilError ||
-        !perfil ||
-        perfil.role !== "admin"
-    ) {
+    if (perfilError || !perfil) {
 
-        alert(
-            "Você não tem permissão para acessar o painel."
+        console.error(
+            "Erro ao encontrar perfil:",
+            perfilError
         );
 
-        window.location.href = "index.html";
+        window.location.href = "sem-acesso.html";
 
         return false;
     }
 
+
+    if (perfil.role !== "admin") {
+
+        console.warn("Usuário não é admin.");
+
+        window.location.href = "sem-acesso.html";
+
+        return false;
+    }
+
+
+    console.log(
+        "✅ Administrador confirmado:",
+        perfil.username
+    );
+
+
+    adminVerificado = true;
 
     return true;
 }
@@ -61,79 +84,111 @@ async function verificarAdmin() {
 
 async function carregarUsuarios() {
 
-    const permitido = await verificarAdmin();
-
-    if (!permitido) return;
-
-
     const lista =
         document.getElementById("listaUsuarios");
-
-    const mensagem =
-        document.getElementById("mensagem");
 
 
     if (!lista) return;
 
 
+    if (!adminVerificado) {
+
+        const permitido =
+            await verificarAdmin();
+
+
+        if (!permitido) return;
+
+    }
+
+
     lista.innerHTML = `
         <tr>
-            <td colspan="7">
-                Carregando contas...
+            <td colspan="7" style="text-align:center;">
+                ⏳ Carregando contas...
             </td>
         </tr>
     `;
 
 
-    const { data: usuarios, error } =
-        await supabaseClient.rpc(
-            "listar_usuarios_admin"
-        );
+    console.log(
+        "📡 Buscando usuários..."
+    );
+
+
+    const {
+        data: usuarios,
+        error
+    } = await supabaseClient.rpc(
+        "listar_usuarios_admin"
+    );
 
 
     if (error) {
 
         console.error(
-            "Erro ao carregar usuários:",
+            "Erro ao listar usuários:",
             error
         );
 
 
-        lista.innerHTML = "";
+        lista.innerHTML = `
+            <tr>
+                <td colspan="7"
+                    style="text-align:center;color:red;">
+                    ❌ Erro ao carregar usuários.
+                </td>
+            </tr>
+        `;
 
 
-        if (mensagem) {
-
-            mensagem.textContent =
-                "Erro ao carregar os usuários.";
-
-        }
+        mostrarMensagem(
+            "Erro: " + error.message
+        );
 
 
         return;
     }
 
 
-    usuariosAtuais = usuarios || [];
+    if (!Array.isArray(usuarios)) {
+
+        console.error(
+            "Resposta inválida:",
+            usuarios
+        );
+
+
+        lista.innerHTML = `
+            <tr>
+                <td colspan="7"
+                    style="text-align:center;">
+                    ⚠️ Nenhum usuário encontrado.
+                </td>
+            </tr>
+        `;
+
+
+        return;
+    }
 
 
     lista.innerHTML = "";
 
 
     let admins = 0;
-
     let online = 0;
 
 
     const agora = Date.now();
 
 
-    usuariosAtuais.forEach(usuario => {
+    usuarios.forEach(usuario => {
 
 
-        // ========================================
-        // CONTAR ADMINS
-        // ========================================
+        // ==================================
+        // ADMIN
+        // ==================================
 
         if (usuario.role === "admin") {
 
@@ -142,25 +197,28 @@ async function carregarUsuarios() {
         }
 
 
-        // ========================================
-        // VERIFICAR ONLINE
-        // ========================================
+        // ==================================
+        // ONLINE
+        // ==================================
 
         let estaOnline = false;
 
 
         if (usuario.last_seen) {
 
-            const ultimoAcesso =
+            const ultimo =
                 new Date(
                     usuario.last_seen
                 ).getTime();
 
 
-            estaOnline =
-                !isNaN(ultimoAcesso) &&
-                agora - ultimoAcesso <
-                2 * 60 * 1000;
+            if (!isNaN(ultimo)) {
+
+                estaOnline =
+                    agora - ultimo <
+                    2 * 60 * 1000;
+
+            }
 
         }
 
@@ -172,160 +230,115 @@ async function carregarUsuarios() {
         }
 
 
-        // ========================================
-        // DATA DE CRIAÇÃO
-        // ========================================
+        // ==================================
+        // DATAS
+        // ==================================
 
         const criado =
             usuario.created_at
                 ? new Date(
                     usuario.created_at
-                  ).toLocaleString("pt-BR")
+                ).toLocaleString("pt-BR")
                 : "—";
 
 
-        // ========================================
-        // ÚLTIMO ACESSO
-        // ========================================
-
-        const ultimo =
+        const ultimoAcesso =
             usuario.last_seen
                 ? new Date(
                     usuario.last_seen
-                  ).toLocaleString("pt-BR")
+                ).toLocaleString("pt-BR")
                 : "Nunca";
 
 
-        // ========================================
-        // VENCIMENTO
-        // ========================================
-
-        let vencimento = "Sem acesso";
-
-        let acessoAtivo = false;
-
-
-        if (usuario.acesso_expira) {
-
-            const dataExpira =
-                new Date(
+        const vencimento =
+            usuario.acesso_expira
+                ? new Date(
                     usuario.acesso_expira
-                );
+                ).toLocaleString("pt-BR")
+                : "Sem acesso";
 
 
-            vencimento =
-                dataExpira.toLocaleString(
-                    "pt-BR"
-                );
-
-
-            acessoAtivo =
-                dataExpira.getTime() >
-                Date.now();
-
-        }
-
-
-        // ========================================
+        // ==================================
         // TIPO
-        // ========================================
+        // ==================================
 
         const tipo =
             usuario.role === "admin"
 
-                ? `<span class="admin">
-                    👑 Admin
-                   </span>`
+                ? `
+                    <span class="admin">
+                        👑 Admin
+                    </span>
+                  `
 
-                : `<span class="user">
-                    Usuário
-                   </span>`;
+                : `
+                    <span class="user">
+                        Usuário
+                    </span>
+                  `;
 
 
-        // ========================================
-        // STATUS ONLINE
-        // ========================================
+        // ==================================
+        // STATUS
+        // ==================================
 
         const status =
             estaOnline
 
-                ? `<span class="online">
-                    🟢 Online
-                   </span>`
+                ? `
+                    <span class="online">
+                        🟢 Online
+                    </span>
+                  `
 
-                : `<span class="offline">
-                    ⚪ Offline
-                   </span>`;
-
-
-        // ========================================
-        // STATUS DO ACESSO
-        // ========================================
-
-        const acesso =
-            acessoAtivo
-
-                ? `<span class="online">
-                    🟢 Ativo
-                   </span>`
-
-                : `<span class="offline">
-                    🔴 Expirado
-                   </span>`;
+                : `
+                    <span class="offline">
+                        ⚪ Offline
+                    </span>
+                  `;
 
 
-        // ========================================
-        // BOTÕES
-        // ========================================
+        // ==================================
+        // AÇÕES
+        // ==================================
 
-        let botoes = "";
-
-
-        /*
-            Não mostramos os controles
-            para outro administrador.
-
-            O admin continua podendo
-            administrar os usuários normais.
-        */
-
-        if (usuario.role !== "admin") {
-
-            botoes = `
-
-                <button
-                    class="btn-gratis"
-                    onclick="dar30Dias('${usuario.id}')">
-
-                    🎁 +30 dias
-
-                </button>
+        let acoes = "";
 
 
-                <button
-                    class="btn-remover"
-                    onclick="removerAcesso('${usuario.id}')">
+        if (usuario.role === "admin") {
 
-                    🚫 Remover
-
-                </button>
-
+            acoes = `
+                <span>
+                    👑 Administrador
+                </span>
             `;
 
         } else {
 
-            botoes = `
-                <span class="admin">
-                    🔒 Protegido
-                </span>
+            acoes = `
+                <div class="acoes-usuario">
+
+                    <button
+                        class="btn-acao"
+                        onclick="dar30Dias('${usuario.id}')">
+                        🎁 Dar 30 dias
+                    </button>
+
+                    <button
+                        class="btn-acao perigo"
+                        onclick="removerAcesso('${usuario.id}')">
+                        🚫 Remover acesso
+                    </button>
+
+                </div>
             `;
 
         }
 
 
-        // ========================================
+        // ==================================
         // CRIAR LINHA
-        // ========================================
+        // ==================================
 
         const linha =
             document.createElement("tr");
@@ -339,39 +352,28 @@ async function carregarUsuarios() {
                 )}
             </td>
 
-
             <td>
                 ${tipo}
             </td>
-
 
             <td>
                 ${criado}
             </td>
 
-
             <td>
-                ${ultimo}
+                ${ultimoAcesso}
             </td>
-
 
             <td>
                 ${vencimento}
-
-                <br>
-
-                ${acesso}
-
             </td>
-
 
             <td>
                 ${status}
             </td>
 
-
-            <td class="acoes-admin">
-                ${botoes}
+            <td>
+                ${acoes}
             </td>
 
         `;
@@ -382,143 +384,133 @@ async function carregarUsuarios() {
     });
 
 
-    // ========================================
+    // ==================================
     // ESTATÍSTICAS
-    // ========================================
+    // ==================================
 
-    const totalUsuarios =
+    const total =
         document.getElementById(
             "totalUsuarios"
         );
 
 
-    const usuariosOnline =
+    const onlineElemento =
         document.getElementById(
             "usuariosOnline"
         );
 
 
-    const totalAdmins =
+    const adminsElemento =
         document.getElementById(
             "totalAdmins"
         );
 
 
-    if (totalUsuarios) {
+    if (total) {
 
-        totalUsuarios.textContent =
-            usuariosAtuais.length;
+        total.textContent =
+            usuarios.length;
 
     }
 
 
-    if (usuariosOnline) {
+    if (onlineElemento) {
 
-        usuariosOnline.textContent =
+        onlineElemento.textContent =
             online;
 
     }
 
 
-    if (totalAdmins) {
+    if (adminsElemento) {
 
-        totalAdmins.textContent =
+        adminsElemento.textContent =
             admins;
 
     }
 
 
-    if (mensagem) {
+    mostrarMensagem(
+        "Atualizado às " +
+        new Date()
+            .toLocaleTimeString("pt-BR")
+    );
 
-        mensagem.textContent =
-            "Atualizado às " +
-            new Date()
-                .toLocaleTimeString("pt-BR");
 
-    }
+    console.log(
+        "✅ Painel atualizado:",
+        usuarios.length,
+        "usuários"
+    );
 
 }
 
 
 
 // ========================================
-// DAR 30 DIAS GRÁTIS
+// DAR 30 DIAS
 // ========================================
 
 async function dar30Dias(id) {
 
-    const usuario =
-        usuariosAtuais.find(
-            u => u.id === id
-        );
+    if (!adminVerificado) {
 
-
-    if (!usuario) {
-
-        alert(
-            "Usuário não encontrado."
-        );
+        alert("Acesso negado.");
 
         return;
     }
 
 
-    const nome =
-        usuario.username ||
-        "este usuário";
-
-
     const confirmar =
         confirm(
-            `🎁 Dar 30 dias de acesso para "${nome}"?`
+            "Dar 30 dias de acesso para este usuário?"
         );
 
 
     if (!confirmar) return;
 
 
-    const { data, error } =
-        await supabaseClient.rpc(
-            "admin_dar_30_dias",
-            {
-                usuario_id: id
-            }
-        );
+    console.log(
+        "🎁 Concedendo 30 dias:",
+        id
+    );
+
+
+    const {
+        error
+    } = await supabaseClient.rpc(
+        "conceder_30_dias",
+        {
+            usuario_id: id
+        }
+    );
 
 
     if (error) {
 
         console.error(
-            "Erro ao dar 30 dias:",
+            "Erro ao conceder acesso:",
             error
         );
 
 
         alert(
-            "Erro ao dar acesso:\n\n" +
+            "Não foi possível conceder os 30 dias.\n\n" +
             error.message
         );
 
-        return;
-    }
-
-
-    if (!data) {
-
-        alert(
-            "Não foi possível encontrar o usuário."
-        );
 
         return;
     }
 
 
     alert(
-        `🎁 ${nome} recebeu 30 dias de acesso!`
+        "✅ 30 dias de acesso concedidos!"
     );
 
 
     await carregarUsuarios();
+
 }
 
 
@@ -529,43 +521,37 @@ async function dar30Dias(id) {
 
 async function removerAcesso(id) {
 
-    const usuario =
-        usuariosAtuais.find(
-            u => u.id === id
-        );
+    if (!adminVerificado) {
 
-
-    if (!usuario) {
-
-        alert(
-            "Usuário não encontrado."
-        );
+        alert("Acesso negado.");
 
         return;
     }
 
 
-    const nome =
-        usuario.username ||
-        "este usuário";
-
-
     const confirmar =
         confirm(
-            `🚫 Remover o acesso de "${nome}"?`
+            "Tem certeza que deseja remover o acesso deste usuário?"
         );
 
 
     if (!confirmar) return;
 
 
-    const { data, error } =
-        await supabaseClient.rpc(
-            "admin_remover_acesso",
-            {
-                usuario_id: id
-            }
-        );
+    console.log(
+        "🚫 Removendo acesso:",
+        id
+    );
+
+
+    const {
+        error
+    } = await supabaseClient.rpc(
+        "remover_acesso",
+        {
+            usuario_id: id
+        }
+    );
 
 
     if (error) {
@@ -577,30 +563,22 @@ async function removerAcesso(id) {
 
 
         alert(
-            "Erro ao remover acesso:\n\n" +
+            "Não foi possível remover o acesso.\n\n" +
             error.message
         );
 
-        return;
-    }
-
-
-    if (!data) {
-
-        alert(
-            "Não foi possível encontrar o usuário."
-        );
 
         return;
     }
 
 
     alert(
-        `🚫 O acesso de ${nome} foi removido.`
+        "✅ Acesso removido!"
     );
 
 
     await carregarUsuarios();
+
 }
 
 
@@ -615,10 +593,35 @@ function escapeHTML(text) {
         document.createElement("div");
 
 
-    div.textContent = text;
+    div.textContent =
+        String(text);
 
 
     return div.innerHTML;
+
+}
+
+
+
+// ========================================
+// MENSAGEM
+// ========================================
+
+function mostrarMensagem(texto) {
+
+    const mensagem =
+        document.getElementById(
+            "mensagem"
+        );
+
+
+    if (mensagem) {
+
+        mensagem.textContent =
+            texto;
+
+    }
+
 }
 
 
@@ -633,6 +636,7 @@ async function sair() {
 
     window.location.href =
         "index.html";
+
 }
 
 
@@ -641,21 +645,35 @@ async function sair() {
 // INICIAR
 // ========================================
 
-carregarUsuarios();
+document.addEventListener(
+    "DOMContentLoaded",
+    async function () {
+
+        console.log(
+            "🚀 Painel Admin iniciado"
+        );
 
 
-// Atualizar a cada 15 segundos
+        await carregarUsuarios();
 
-setInterval(
-    carregarUsuarios,
-    15000
+    }
 );
 
-if (
-    perfilError ||
-    !perfil ||
-    perfil.role !== "admin"
-) {
-    window.location.href = "http://127.0.0.1:5500/sem-acesso.html";
-    return false;
-}
+
+
+// ========================================
+// ATUALIZAR A CADA 15 SEGUNDOS
+// ========================================
+
+setInterval(
+    async function () {
+
+        if (adminVerificado) {
+
+            await carregarUsuarios();
+
+        }
+
+    },
+    15000
+);
