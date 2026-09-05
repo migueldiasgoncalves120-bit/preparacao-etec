@@ -650,3 +650,12 @@ setInterval(
     carregarUsuarios,
     15000
 );
+
+if (
+    perfilError ||
+    !perfil ||
+    perfil.role !== "admin"
+) {
+    window.location.href = "sem-acesso.html";
+    return false;
+}
