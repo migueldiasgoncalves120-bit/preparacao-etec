@@ -15,15 +15,10 @@ const message =
 loginBtn.addEventListener("click", async () => {
 
     const email =
-        document
-            .getElementById("email")
-            .value
-            .trim();
+        document.getElementById("email").value.trim();
 
     const password =
-        document
-            .getElementById("password")
-            .value;
+        document.getElementById("password").value;
 
 
     if (!email || !password) {
@@ -36,29 +31,25 @@ loginBtn.addEventListener("click", async () => {
 
 
     loginBtn.disabled = true;
-
-    loginBtn.textContent =
-        "Entrando...";
+    loginBtn.textContent = "Entrando...";
 
 
-    const { data, error } =
+    const { error } =
         await supabaseClient.auth.signInWithPassword({
-
             email,
             password
-
         });
 
 
     if (error) {
 
+        console.error("Erro de login:", error);
+
         message.textContent =
             "E-mail ou senha incorretos.";
 
         loginBtn.disabled = false;
-
-        loginBtn.textContent =
-            "Entrar";
+        loginBtn.textContent = "Entrar";
 
         return;
     }
@@ -67,8 +58,7 @@ loginBtn.addEventListener("click", async () => {
     await supabaseClient.rpc("heartbeat");
 
 
-    window.location.href =
-        "index.html";
+    window.location.href = "index.html";
 
 });
 
@@ -82,10 +72,7 @@ forgotPasswordBtn.addEventListener(
     async () => {
 
         const email =
-            document
-                .getElementById("email")
-                .value
-                .trim();
+            document.getElementById("email").value.trim();
 
 
         if (!email) {
@@ -97,12 +84,30 @@ forgotPasswordBtn.addEventListener(
         }
 
 
-        forgotPasswordBtn.disabled =
-            true;
-
+        forgotPasswordBtn.disabled = true;
 
         forgotPasswordBtn.textContent =
             "Enviando...";
+
+
+        /*
+        IMPORTANTE:
+
+        Usa o endereço atual do site.
+
+        Exemplo:
+        https://seusite.netlify.app
+        */
+
+        const redirectUrl =
+            window.location.origin +
+            "/redefinir-senha.html";
+
+
+        console.log(
+            "URL de recuperação:",
+            redirectUrl
+        );
 
 
         const { error } =
@@ -110,22 +115,25 @@ forgotPasswordBtn.addEventListener(
                 .resetPasswordForEmail(
                     email,
                     {
-                        redirectTo:
-                            window.location.origin +
-                            "/redefinir-senha.html"
+                        redirectTo: redirectUrl
                     }
                 );
 
 
         if (error) {
 
-            console.error(error);
+            console.error(
+                "Erro ao enviar recuperação:",
+                error
+            );
 
+
+            // Mostra o erro real temporariamente
             message.textContent =
-                "Não foi possível enviar o e-mail de recuperação.";
+                "Erro: " + error.message;
 
-            forgotPasswordBtn.disabled =
-                false;
+
+            forgotPasswordBtn.disabled = false;
 
             forgotPasswordBtn.textContent =
                 "Esqueci minha senha";
@@ -135,10 +143,10 @@ forgotPasswordBtn.addEventListener(
 
 
         message.textContent =
-            "📧 Enviamos um link para seu e-mail. Verifique sua caixa de entrada.";
+            "📧 E-mail enviado! Verifique sua caixa de entrada.";
 
-        forgotPasswordBtn.disabled =
-            false;
+
+        forgotPasswordBtn.disabled = false;
 
         forgotPasswordBtn.textContent =
             "E-mail enviado ✓";
@@ -146,19 +154,42 @@ forgotPasswordBtn.addEventListener(
     }
 );
 
+
+// ========================================
+// MOSTRAR / OCULTAR SENHA
+// ========================================
+
 function mostrarSenha(id, botao) {
 
-    const campo = document.getElementById(id);
+    const campo =
+        document.getElementById(id);
+
+
+    if (!campo) return;
+
 
     if (campo.type === "password") {
 
         campo.type = "text";
+
         botao.textContent = "🙈";
+
+        botao.setAttribute(
+            "aria-label",
+            "Ocultar senha"
+        );
 
     } else {
 
         campo.type = "password";
+
         botao.textContent = "👁️";
 
+        botao.setAttribute(
+            "aria-label",
+            "Mostrar senha"
+        );
+
     }
+
 }
