@@ -21,6 +21,7 @@
             Entre na sua conta da Preparação Etec
         </p>
 
+
         <label for="email">E-mail</label>
 
         <input
@@ -30,36 +31,73 @@
             autocomplete="email"
         >
 
-        <label for="password">Senha</label>
 
-        <input
-            type="password"
-            id="password"
-            placeholder="Digite sua senha"
-            autocomplete="current-password"
-        >
+       <label for="password">Senha</label>
 
-        <button class="conta-btn" id="loginBtn">
-            Entrar
+<div class="senha-container">
+    <input
+        type="password"
+        id="password"
+        placeholder="Digite sua senha"
+        autocomplete="current-password"
+    >
+
+    <button
+        type="button"
+        class="mostrar-senha"
+        onclick="mostrarSenha('password', this)"
+        aria-label="Mostrar senha"
+    >
+        👁️
+    </button>
+</div>
+
+
+        <!-- ESQUECI A SENHA -->
+
+        <button
+            class="esqueci-senha"
+            id="forgotPasswordBtn">
+
+            Esqueci minha senha
+
         </button>
 
-        <p class="conta-mensagem" id="message"></p>
 
-        <p class="conta-link">
-            Ainda não tem uma conta?
-            <a href="cadastro.html">Criar conta</a>
+        <p
+            class="conta-mensagem"
+            id="message">
         </p>
 
-        <a class="voltar" href="index.html">
+
+        <p class="conta-link">
+
+            Ainda não tem uma conta?
+
+            <a href="cadastro.html">
+                Criar conta
+            </a>
+
+        </p>
+
+
+        <a
+            class="voltar"
+            href="index.html">
+
             ← Voltar para o site
+
         </a>
 
     </div>
 
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="supabase.js"></script>
+
 <script src="login.js"></script>
 
 </body>
