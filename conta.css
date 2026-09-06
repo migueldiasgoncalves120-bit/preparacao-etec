@@ -107,3 +107,72 @@ body {
     color: #667085;
     text-decoration: none;
 }
+
+.esqueci-senha {
+
+    display: block;
+
+    width: 100%;
+
+    margin-top: 12px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #2563eb;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+
+.esqueci-senha:hover {
+
+    text-decoration: underline;
+
+}
+
+
+.esqueci-senha:disabled {
+
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+}
+
+.senha-container {
+    position: relative;
+    width: 100%;
+}
+
+.senha-container input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 50px;
+}
+
+.mostrar-senha {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    border: none;
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    padding: 5px;
+}
+
+.mostrar-senha:hover {
+    transform: translateY(-50%) scale(1.1);
+}

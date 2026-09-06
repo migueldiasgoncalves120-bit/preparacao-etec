@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nova senha - Preparação Etec</title>
+
+    <link rel="stylesheet" href="conta.css">
+</head>
+
+<body>
+
+<div class="conta-container">
+
+    <div class="conta-card">
+
+        <h1>🔑 Nova senha</h1>
+
+        <p class="subtitulo">
+            Crie uma nova senha para sua conta
+        </p>
+
+
+        <!-- NOVA SENHA -->
+
+        <label for="password">
+            Nova senha
+        </label>
+
+        <div class="senha-container">
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Digite sua nova senha"
+                autocomplete="new-password"
+            >
+
+            <button
+                type="button"
+                class="mostrar-senha"
+                onclick="mostrarSenha('password', this)"
+                aria-label="Mostrar senha"
+            >
+                👁️
+            </button>
+
+        </div>
+
+
+        <!-- CONFIRMAR SENHA -->
+
+        <label for="confirmPassword">
+            Confirmar nova senha
+        </label>
+
+        <div class="senha-container">
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Digite a senha novamente"
+                autocomplete="new-password"
+            >
+
+            <button
+                type="button"
+                class="mostrar-senha"
+                onclick="mostrarSenha('confirmPassword', this)"
+                aria-label="Mostrar senha"
+            >
+                👁️
+            </button>
+
+        </div>
+
+
+        <!-- BOTÃO -->
+
+        <button
+            class="conta-btn"
+            id="resetBtn"
+            type="button"
+        >
+            Alterar senha
+        </button>
+
+
+        <!-- MENSAGEM -->
+
+        <p
+            class="conta-mensagem"
+            id="message">
+        </p>
+
+
+        <a
+            class="voltar"
+            href="login.html"
+        >
+            ← Voltar para o login
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+<script src="redefinir-senha.js"></script>
+
+</body>
+
+</html>
