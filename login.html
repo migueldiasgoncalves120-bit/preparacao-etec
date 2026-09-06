@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +23,11 @@
         </p>
 
 
-        <label for="email">E-mail</label>
+        <!-- E-MAIL -->
+
+        <label for="email">
+            E-mail
+        </label>
 
         <input
             type="email"
@@ -32,43 +37,64 @@
         >
 
 
-       <label for="password">Senha</label>
+        <!-- SENHA -->
 
-<div class="senha-container">
-    <input
-        type="password"
-        id="password"
-        placeholder="Digite sua senha"
-        autocomplete="current-password"
-    >
+        <label for="password">
+            Senha
+        </label>
 
-    <button
-        type="button"
-        class="mostrar-senha"
-        onclick="mostrarSenha('password', this)"
-        aria-label="Mostrar senha"
-    >
-        👁️
-    </button>
-</div>
+        <div class="senha-container">
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Digite sua senha"
+                autocomplete="current-password"
+            >
+
+            <button
+                type="button"
+                class="mostrar-senha"
+                onclick="mostrarSenha('password', this)"
+                aria-label="Mostrar senha"
+            >
+                👁️
+            </button>
+
+        </div>
+
+
+        <!-- BOTÃO ENTRAR -->
+
+        <button
+            class="conta-btn"
+            id="loginBtn"
+            type="button"
+        >
+            Entrar
+        </button>
 
 
         <!-- ESQUECI A SENHA -->
 
         <button
             class="esqueci-senha"
-            id="forgotPasswordBtn">
-
+            id="forgotPasswordBtn"
+            type="button"
+        >
             Esqueci minha senha
-
         </button>
 
+
+        <!-- MENSAGEM -->
 
         <p
             class="conta-mensagem"
             id="message">
         </p>
 
+
+        <!-- CADASTRO -->
 
         <p class="conta-link">
 
@@ -81,18 +107,21 @@
         </p>
 
 
+        <!-- VOLTAR -->
+
         <a
             class="voltar"
-            href="index.html">
-
+            href="index.html"
+        >
             ← Voltar para o site
-
         </a>
 
     </div>
 
 </div>
 
+
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -101,4 +130,5 @@
 <script src="login.js"></script>
 
 </body>
+
 </html>
